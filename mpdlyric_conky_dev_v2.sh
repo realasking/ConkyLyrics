@@ -56,7 +56,7 @@ if [ "$state" == "[playing]" ]; then
 				echo "" >>/tmp/music_segments
 				echo "00" >/tmp/musicTimer
 				#不加这一句有些歌词会缺第一句，加上这一句有些歌词中插入的非歌词信息的最后一句会重复出现
-				cat /tmp/muLrc | grep "^\[" | head -n 1 | sed 's/\[[^]]*]//g' | sed 's/\\r//' | dos2unix >>/tmp/music_segments
+				cat /tmp/muLrc | grep "^\[" | head -n 1 | sed 's/\[[^]]*]//g' | sed 's/\\r//'| dos2unix|sed 's/[　\t]*$//g|sed 's/[ \t]*$//g'' >>/tmp/music_segments
 			fi
 			#这种写法有些歌曲会漏掉一些歌词
 			nlin=$(cat /tmp/muLrc | grep -n "\[$time" | awk -F ':' '{print $1}' | head -n 1)
@@ -75,9 +75,9 @@ if [ "$state" == "[playing]" ]; then
 			if [ ${Sec} == ${TSec} ]; then
 				echo ${Sec} >/tmp/musicTimer
 			else
-				aac=$(echo $Nxt | sed 's/\[[^]]*]//g' | sed 's/\\r//' | grep -o "[^ ]\+\( \+[^ ]\+\)*" | sed -e '/^$/d')
+				aac=$(echo $Nxt | sed 's/\[[^]]*]//g' | sed 's/\\r//' |sed 's/[　\t]*$//g'| grep -o "[^ ]\+\( \+[^ ]\+\)*" | sed -e '/^$/d')
 				#aaee用来解决漏掉歌词问题
-				aaee=$(echo $NlI | sed 's/\[[^]]*]//g' | sed 's/\\r//' | grep -o "[^ ]\+\( \+[^ ]\+\)*" | sed -e '/^$/d')
+				aaee=$(echo $NlI | sed 's/\[[^]]*]//g' | sed 's/\\r//' |sed 's/[　\t]*$//g'| grep -o "[^ ]\+\( \+[^ ]\+\)*" | sed -e '/^$/d')
 				aar=$(cat /tmp/music_segments | tail -1)
 				if [ "${aaee}""x" == "${aar}""x" ]; then
 					aaee=""
