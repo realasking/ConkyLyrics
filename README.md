@@ -1,4 +1,4 @@
-# ConkyLyrics
+# ConkyLyrics -- A lyrics show tool for conky in linux
 
 by realasking
 
